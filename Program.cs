@@ -1,5 +1,6 @@
 using CandyApi.Extensions;
 using CandyApi.Repository;
+using CandyApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 // Servicios
@@ -8,6 +9,7 @@ builder.Services.AddControllersWithValidation();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddScoped<IUserRespository, UserRepository>();
+builder.Services.AddSingleton<IJwtService, JwtService>(); 
 
 var app = builder.Build();
 
