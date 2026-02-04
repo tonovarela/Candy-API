@@ -33,27 +33,34 @@ namespace CandyApi.Controllers
             bool isValid = await _userRepository.IsValidUserCredentials(loginDTO);
             if (isValid == false)
                 return Unauthorized(new { message = "Credenciales inválidas" });
-
-            var secret = _config.GetValue<string>("ApiSetting:SecretKey");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, loginDTO.Username!),
-                new Claim("role", "User")
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: "Litoprocess S.A de C.V.",
-                audience: null,
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: creds
-            );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = GenerateJwtToken(loginDTO.Username!);            
             return Ok(new { token = tokenString });
         }
 
+    
+
+    private string GenerateJwtToken(string username)
+    {
+        var secret = _config.GetValue<string>("ApiSetting:SecretKey");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, username),
+            new Claim("role", "User")
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: "Litoprocess S.A de C.V.",
+            audience: null,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(2),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
+}
+
+
