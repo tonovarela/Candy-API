@@ -34,8 +34,7 @@ namespace CandyApi.Controllers
 
             return Ok(new
             {
-                Message = "Consulta exitosa",
-                Claims = claims,
+                Message = "Consulta exitosa",                
                 Payload = payload
             });
         }
