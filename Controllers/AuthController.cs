@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using CandyApi.DTO;
 using CandyApi.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +23,15 @@ namespace CandyApi.Controllers
         }
 
 
-         public record LoginRequest(string Username, string Password);
+
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public IActionResult Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
-         
-            bool isValid= _userRepository.IsValidUserCredentials(request.Username, request.Password);            
-            if (isValid == false) 
+
+            bool isValid = await _userRepository.IsValidUserCredentials(loginDTO);
+            if (isValid == false)
                 return Unauthorized(new { message = "Credenciales inválidas" });
 
             var secret = _config.GetValue<string>("ApiSetting:SecretKey");
@@ -37,12 +39,12 @@ namespace CandyApi.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, request.Username),
+                new Claim(ClaimTypes.Name, loginDTO.Username!),
                 new Claim("role", "User")
             };
 
             var token = new JwtSecurityToken(
-                issuer: "Litoprocess S.A de C.V.", 
+                issuer: "Litoprocess S.A de C.V.",
                 audience: null,
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),

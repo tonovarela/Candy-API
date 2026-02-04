@@ -1,10 +1,11 @@
 using System;
+using CandyApi.DTO;
 
 namespace CandyApi.Repository;
 
 public interface IUserRespository
 {
 
-    public bool IsValidUserCredentials(string username, string password);
+    public Task<bool> IsValidUserCredentials(LoginDTO loginDTO);
 
 }

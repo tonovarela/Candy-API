@@ -25,6 +25,8 @@
     <Folder Include="Constants/" />
     <Folder Include="Controllers/" />
     <Folder Include="Data/" />
+    <Folder Include="DTO/" />
+    <Folder Include="Extensions/" />
   </ItemGroup>
 
 </Project>
