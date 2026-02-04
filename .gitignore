@@ -1,0 +1,26 @@
+appsettings.Development.json
+
+
+# --- Dotnet build ---
+bin/
+obj/
+out/
+publish/
+
+# --- Visual Studio / JetBrains / VSCode ---
+.vs/
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.iml
+
+# --- Logs ---
+*.log
+logs/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db

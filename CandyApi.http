@@ -1,0 +1,6 @@
+@CandyApi_HostAddress = http://localhost:5123
+
+GET {{CandyApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
