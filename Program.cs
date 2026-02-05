@@ -1,5 +1,6 @@
 using CandyApi.Extensions;
-using CandyApi.Repository;
+using CandyApi.Repository.Implementations;
+using CandyApi.Repository.Interfaces;
 using CandyApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);

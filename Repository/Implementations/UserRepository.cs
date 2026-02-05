@@ -1,11 +1,11 @@
-using System;
-using System.Data;
+
 using CandyApi.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
-using CandyApi.DTO;
 
-namespace CandyApi.Repository;
+using CandyApi.DTO;
+using CandyApi.Repository.Interfaces;
+
+namespace CandyApi.Repository.Implementations;
 
 public class UserRepository : IUserRespository
 {

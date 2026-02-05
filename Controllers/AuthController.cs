@@ -1,5 +1,6 @@
 using CandyApi.DTO;
-using CandyApi.Repository;
+
+using CandyApi.Repository.Interfaces;
 using CandyApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,7 @@
 using System;
 using CandyApi.Entities;
 
-namespace CandyApi.Repository;
+namespace CandyApi.Repository.Interfaces;
 
 public interface IMaterialesRepository
 {
