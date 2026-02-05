@@ -8,6 +8,7 @@ public class ApplicationDBContext:DbContext
 {
 
  public DbSet<CatUsuario> CatUsuarios { get; set; } = null!;
+public DbSet<TipoMaterial> TiposMateriales { get; set; } = null!;
 public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
         : base(options)
     {

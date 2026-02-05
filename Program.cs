@@ -8,7 +8,9 @@ builder.Services.AddSwaggerConfiguration();
 builder.Services.AddControllersWithValidation();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
 builder.Services.AddScoped<IUserRespository, UserRepository>();
+builder.Services.AddScoped<IMaterialesRepository, MaterialesRepository>();
 builder.Services.AddSingleton<IJwtService, JwtService>(); 
 
 var app = builder.Build();
