@@ -1,18 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using CandyApi.DTO;
 using CandyApi.Repository;
 using CandyApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CandyApi.Controllers
 {
     [Route("api/auth")]
-    [ApiController]
+    [ApiController]     
     public class AuthController : ControllerBase
     {
             private readonly IJwtService _jwtService;        

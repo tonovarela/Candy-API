@@ -15,15 +15,10 @@ public static class SwaggerExtensions
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Ingrese 'Bearer {token}'"
-            });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
-                    Array.Empty<string>()
-                }
-            });
+                Description = "Ingrese el token JWT en el formato: Bearer {token} que se obtiene desde el endpoint de autenticación."
+            });            
+            c.OperationFilter<AuthorizeCheckOperationFilter>();
+            
         });
         return services;
     }
