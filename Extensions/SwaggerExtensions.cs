@@ -15,10 +15,23 @@ public static class SwaggerExtensions
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Ingrese el token JWT en el formato: Bearer {token} que se obtiene desde el endpoint de autenticación."
-            });            
+                Description = "Ingrese el token JWT \n\r\n\r En el formato: Bearer {token} que se obtiene desde el endpoint de autenticación."
+            });
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "API CandyCRM",
+                Version = "v1",
+                Description = "API CandyCRM para gestionar elementos presupuestados",                
+                Contact = new OpenApiContact
+                {
+                    Name = "Soporte API CandyCRM",                    
+                    Email = "mestelles@litoprocess.com",
+                    
+                },
+                
+            });
             c.OperationFilter<AuthorizeCheckOperationFilter>();
-            
+
         });
         return services;
     }
