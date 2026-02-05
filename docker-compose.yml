@@ -11,6 +11,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}
       - ConnectionStrings__ConexionSql=${CONNECTION_STRING}
+      - ApiSetting__BasePath=${BASE_PATH}
       - ApiSetting__SecretKey=${JWT_SECRET_KEY}
     extra_hosts:
       - "host.docker.internal:host-gateway"

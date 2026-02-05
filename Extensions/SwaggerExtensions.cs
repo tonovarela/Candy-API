@@ -36,14 +36,38 @@ public static class SwaggerExtensions
         return services;
     }
 
-    public static WebApplication UseSwaggerConfiguration(this WebApplication app)
+    public static WebApplication UseSwaggerConfiguration(this WebApplication app, string? basePath = null)
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger(c => c.RouteTemplate = "docs/{documentName}/swagger.json");
+            // Configurar PathBase si hay proxy
+            if (!string.IsNullOrEmpty(basePath))
+            {
+                app.UsePathBase(basePath);
+            }
+
+            // Usar headers del proxy
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor 
+                                 | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+                                 | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost
+            });
+
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "docs/{documentName}/swagger.json";
+                c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                {
+                    // Ajustar URL base según headers del proxy
+                    var serverUrl = $"{httpReq.Scheme}://{httpReq.Host.Value}{basePath}";
+                    swaggerDoc.Servers = new List<OpenApiServer> { new() { Url = serverUrl } };
+                });
+            });
+
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/docs/v1/swagger.json", "CandyApi V1");
+                c.SwaggerEndpoint($"{basePath}/docs/v1/swagger.json", "CandyApi V1");
                 c.RoutePrefix = "docs";
                 c.DocumentTitle = "CandyApi - Documentación API";
             });

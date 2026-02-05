@@ -15,10 +15,12 @@ builder.Services.AddScoped<IMaterialesRepository, MaterialesRepository>();
 builder.Services.AddSingleton<IJwtService, JwtService>(); 
 
 var app = builder.Build();
+var basePath = builder.Configuration.GetValue<string>("ApiSetting:BasePath") ?? "";
+Console.WriteLine($"BasePath: {basePath ?? "No base path set"}");
 
 // Middleware
 app.VerifyDatabaseConnection();
-app.UseSwaggerConfiguration();
+app.UseSwaggerConfiguration(basePath);
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthentication();
