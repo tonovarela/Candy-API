@@ -1,0 +1,23 @@
+
+services:
+  candyapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: candyapi
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+      - ConnectionStrings__ConexionSql=${CONNECTION_STRING}
+      - ApiSetting__SecretKey=${JWT_SECRET_KEY}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - candynet
+    restart: unless-stopped
+
+networks:
+  candynet:
+    driver: bridge
