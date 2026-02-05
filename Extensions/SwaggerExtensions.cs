@@ -38,8 +38,8 @@ public static class SwaggerExtensions
 
     public static WebApplication UseSwaggerConfiguration(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
-        {
+        // if (app.Environment.IsDevelopment())
+        // {
             app.UseSwagger(c => c.RouteTemplate = "docs/{documentName}/swagger.json");
             app.UseSwaggerUI(c =>
             {
@@ -47,7 +47,7 @@ public static class SwaggerExtensions
                 c.RoutePrefix = "docs";
                 c.DocumentTitle = "CandyApi - Documentación API";
             });
-        }
+        //}
         return app;
     }
 
