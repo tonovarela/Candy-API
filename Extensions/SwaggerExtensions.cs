@@ -20,7 +20,7 @@ public static class SwaggerExtensions
             });
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "API CandyCRM",
+                Title = "API CandyCRM",                
                 Version = "v1",
                 Description = "API CandyCRM para gestionar elementos presupuestados",
                 Contact = new OpenApiContact
@@ -45,9 +45,12 @@ public static class SwaggerExtensions
                 c.RouteTemplate = "docs/{documentName}/swagger.json";
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
-                    // Usar scheme y host ya procesados por ForwardedHeaders
-                  var scheme = httpReq.Scheme;
-                    var host = httpReq.Host.Value;
+                      var scheme = httpReq.Headers["X-Forwarded-Proto"].FirstOrDefault() 
+                                 ?? httpReq.Scheme;
+                    
+                    var host = httpReq.Headers["X-Forwarded-Host"].FirstOrDefault() 
+                               ?? httpReq.Host.Value;
+                                                            
                     var serverUrl = $"{scheme}://{host}{basePath}";
                     swaggerDoc.Servers = new List<OpenApiServer>
                     {
