@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 namespace CandyApi.Extensions;
 
@@ -41,32 +42,43 @@ public static class SwaggerExtensions
         if (app.Environment.IsDevelopment())
         {
             // Configurar PathBase si hay proxy
+             // Configurar headers del proxy PRIMERO
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor 
+                                 | ForwardedHeaders.XForwardedProto 
+                                 | ForwardedHeaders.XForwardedHost,
+                // Permitir cualquier proxy (ajustar en producción)
+                KnownNetworks = { },
+                KnownProxies = { }
+            });
+
+            // Configurar PathBase si hay proxy
             if (!string.IsNullOrEmpty(basePath))
             {
                 app.UsePathBase(basePath);
             }
-
-            // Usar headers del proxy
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor 
-                                 | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
-                                 | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost
-            });
 
             app.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.json";
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
-                    // Ajustar URL base según headers del proxy
-                    var serverUrl = $"{httpReq.Scheme}://{httpReq.Host.Value}{basePath}";
-                    swaggerDoc.Servers = new List<OpenApiServer> { new() { Url = serverUrl } };
+                    // Usar scheme del proxy (https) no el interno (http)
+                    var scheme = httpReq.Headers["X-Forwarded-Proto"].FirstOrDefault() ?? httpReq.Scheme;
+                    var host = httpReq.Headers["X-Forwarded-Host"].FirstOrDefault() ?? httpReq.Host.Value;
+                    var serverUrl = $"{scheme}://{host}{basePath}";
+                    
+                    swaggerDoc.Servers = new List<OpenApiServer> 
+                    { 
+                        new() { Url = serverUrl, Description = "API Server" } 
+                    };
                 });
             });
 
             app.UseSwaggerUI(c =>
             {
+                // URL relativa para evitar problemas de mixed content
                 c.SwaggerEndpoint($"{basePath}/docs/v1/swagger.json", "CandyApi V1");
                 c.RoutePrefix = "docs";
                 c.DocumentTitle = "CandyApi - Documentación API";

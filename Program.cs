@@ -1,4 +1,5 @@
 using CandyApi.Extensions;
+using CandyApi.Middleware;
 using CandyApi.Repository.Implementations;
 using CandyApi.Repository.Interfaces;
 using CandyApi.Services;
@@ -19,6 +20,7 @@ var basePath = builder.Configuration.GetValue<string>("ApiSetting:BasePath") ?? 
 Console.WriteLine($"BasePath: {basePath ?? "No base path set"}");
 
 // Middleware
+app.UseMiddleware<ForwardedHeadersMiddleware>();
 app.VerifyDatabaseConnection();
 app.UseSwaggerConfiguration(basePath);
 app.UseHttpsRedirection();
