@@ -18,7 +18,7 @@ public class JwtService:IJwtService
         _issuer = "Litoprocess S.A de C.V.";
     }
 
-    public string GenerateToken(string username, string role = "User")
+    public Tuple<string, DateTime> GenerateToken(string username, string role = "User")
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -38,7 +38,9 @@ public class JwtService:IJwtService
             signingCredentials: creds
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return Tuple.Create(tokenString,token.ValidTo.ToLocalTime());
     }
 
     public JwtPayload? DecodeToken(string token)

@@ -32,8 +32,8 @@ namespace CandyApi.Controllers
         if (!isValid)
             return Unauthorized(new { message = "Credenciales inválidas" });
 
-        var token = _jwtService.GenerateToken(loginDTO.Username!);
-        return Ok(new { token });
+        var tokenResponse = _jwtService.GenerateToken(loginDTO.Username!);
+        return Ok(new { token = tokenResponse.Item1, expires = tokenResponse.Item2 } );
         
         }
 
