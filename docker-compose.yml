@@ -13,6 +13,8 @@ services:
       - ConnectionStrings__ConexionSql=${CONNECTION_STRING}
       - ApiSetting__BasePath=${BASE_PATH}
       - ApiSetting__SecretKey=${JWT_SECRET_KEY}
+      - ApiSetting__ForceHttps=${FORCE_HTTPS:-true}
+      - ApiSetting__InternalPort=${INTERNAL_PORT:-5050}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:

@@ -1,12 +1,12 @@
-
 using Microsoft.OpenApi.Models;
+
 namespace CandyApi.Extensions;
 
 public static class SwaggerExtensions
 {
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
-       services.AddEndpointsApiExplorer();
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -20,7 +20,7 @@ public static class SwaggerExtensions
             });
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "API CandyCRM",                
+                Title = "API CandyCRM",
                 Version = "v1",
                 Description = "API CandyCRM para gestionar elementos presupuestados",
                 Contact = new OpenApiContact
@@ -36,26 +36,42 @@ public static class SwaggerExtensions
 
     public static WebApplication UseSwaggerConfiguration(this WebApplication app, string? basePath = null)
     {
-         if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
-            
-            
+            var forceHttps = app.Configuration.GetValue<bool>("ApiSetting:ForceHttps");
+            var internalPort = app.Configuration.GetValue<string>("ApiSetting:InternalPort") ?? "5050";
+
             app.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.json";
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
-                      var scheme = httpReq.Headers["X-Forwarded-Proto"].FirstOrDefault() 
-                                 ?? httpReq.Scheme;
-                    
-                    var host = httpReq.Headers["X-Forwarded-Host"].FirstOrDefault() 
-                               ?? httpReq.Host.Value;
-                                                            
-                    var serverUrl = $"{scheme}://{host}{basePath}";
-                    swaggerDoc.Servers = new List<OpenApiServer>
+
+                    var forwardedProto = httpReq.Headers["X-Forwarded-Proto"].FirstOrDefault();
+                    var forwardedHost = httpReq.Headers["X-Forwarded-Host"].FirstOrDefault();                    
+                    var servers = new List<OpenApiServer>();
+                            
+                    // Si viene de proxy, agregar también el interno
+                    if (!string.IsNullOrEmpty(forwardedHost))
                     {
-                        new() { Url = serverUrl, Description = "API Server" }
-                    };
+                        var internalHost = httpReq.Host.Value;
+                        var isHttps = !string.IsNullOrEmpty(forwardedProto) 
+                        ? forwardedProto.Split(',')[0].Trim().Equals("https", StringComparison.OrdinalIgnoreCase)
+                        : httpReq.IsHttps;
+
+                        var clientScheme = isHttps ? "https" : "http";  
+                        var clientHost = !string.IsNullOrEmpty(forwardedHost) 
+                        ? forwardedHost.Split(',')[0].Trim() 
+                        : httpReq.Host.Value;
+                      
+                        servers.Add(new OpenApiServer 
+                        { 
+                            Url = $"{clientScheme}://{clientHost}{basePath}", 
+                            Description = "🏠 Interno (directo)" 
+                        });
+                    }
+                    
+                    swaggerDoc.Servers = servers;
                 });
             });
 
@@ -68,5 +84,4 @@ public static class SwaggerExtensions
         }
         return app;
     }
-
 }
