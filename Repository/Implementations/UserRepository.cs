@@ -19,12 +19,11 @@ public class UserRepository : IUserRespository
     public  Task<bool> IsValidUserCredentials(LoginDTO loginDTO)
     {
         var username = loginDTO.Username;
-        var password = loginDTO.Password;
-    {      
+        var password = loginDTO.Password;          
       var query = _db.CatUsuarios
             .FromSqlInterpolated($"SELECT * FROM ControlLogin.dbo.cat_Usuarios WHERE Login = {username} AND Password = {password} and Estatus='ACTIVO' ")
             .AsNoTracking();
         return query.AnyAsync();
-    }
+    
     }
 }

@@ -2,7 +2,7 @@ using CandyApi.Extensions;
 using CandyApi.Repository.Implementations;
 using CandyApi.Repository.Interfaces;
 using CandyApi.Services;
-using Microsoft.AspNetCore.HttpOverrides;
+
 
 
 
@@ -16,7 +16,9 @@ builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 builder.Services.AddScoped<IUserRespository, UserRepository>();
 builder.Services.AddScoped<IMaterialesRepository, MaterialesRepository>();
+builder.Services.AddScoped<IVendedorRepository, VendedorRepository>();
 builder.Services.AddSingleton<IJwtService, JwtService>(); 
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>

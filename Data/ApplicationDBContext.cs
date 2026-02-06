@@ -1,4 +1,4 @@
-using System;
+
 using CandyApi.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +9,7 @@ public class ApplicationDBContext:DbContext
 
  public DbSet<CatUsuario> CatUsuarios { get; set; } = null!;
 public DbSet<TipoMaterial> TiposMateriales { get; set; } = null!;
+public DbSet<Vendedor> Vendedores { get; set; } = null!;
 public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
         : base(options)
     {

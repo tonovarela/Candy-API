@@ -17,8 +17,7 @@ public class MaterialesRepository:IMaterialesRepository
     }
     public async Task<IEnumerable<TipoMaterial>> obtener(string id, string descripcion, string catalogo)
     {                    
-        string sql=$"select {id} Id, {descripcion} Nombre from {catalogo}";
-        Console.WriteLine($"Ejecutando consulta SQL: {sql}");
+        string sql=$"select {id} Id, {descripcion} Nombre from {catalogo}";        
         var result = await _db.TiposMateriales
                 .FromSqlRaw(sql)
             .AsNoTracking().ToListAsync();
