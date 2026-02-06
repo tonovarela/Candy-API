@@ -9,6 +9,7 @@ namespace CandyApi.Controllers
     [Route("api/users")]
     [EnableCors(PolicyNames.AllowSpecificOrigins)]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)] 
     [Authorize]
     public class UsersController : ControllerBase
     {
